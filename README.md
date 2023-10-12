@@ -5,7 +5,7 @@ A Go library used to retrieve subsidiaries for a Norwegian company based on owne
 ## Installation
 
 ```
-go get github.com/root4loot/proffno@master
+go get github.com/root4loot/proffNO
 ```
 
 ## Usage
@@ -15,7 +15,7 @@ package main
 
 import (
     "fmt"
-    "github.com/root4loot/proffno"
+    "github.com/root4loot/proffNO"
 )
 
 func main() {
