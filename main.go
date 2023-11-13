@@ -2,7 +2,9 @@ package proffNO
 
 import (
 	"encoding/json"
+	"io"
 	"net/http"
+	"regexp"
 	"strings"
 	"unicode"
 )
@@ -20,7 +22,13 @@ type Results struct {
 func findOrgInfo(query string, queryIsOrgName bool) (orgInfo string, err error) {
 	query = strings.ReplaceAll(query, " ", "+")
 
-	response, err := http.Get("https://beta.proff.no/_next/data/hxtXFqdyQlFeLUOIwxXBz/search.json?q=" + query)
+	// Get the build ID
+	buildID, err := getBuildID()
+	if err != nil {
+		return "", err
+	}
+
+	response, err := http.Get("https://beta.proff.no/_next/data/" + buildID + "/search.json?q=" + query)
 	if err != nil {
 		return "", err
 	}
@@ -69,6 +77,32 @@ func GetSubsidiaries(orgName string, level int, greaterThanPercentage float64) (
 	}
 
 	return results, nil
+}
+
+func getBuildID() (string, error) {
+	// Make a GET request
+	resp, err := http.Get("https://beta.proff.no/")
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	// Read the response body
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+
+	// Regular expression to find the build ID
+	re := regexp.MustCompile(`"buildId":"(.*?)"`)
+	matches := re.FindStringSubmatch(string(body))
+
+	if len(matches) < 2 {
+		return "", nil // No match found
+	}
+
+	// Return the found build ID
+	return matches[1], nil
 }
 
 // collectSubsidiaries collects the subsidiaries of a company
