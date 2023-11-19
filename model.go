@@ -1,4 +1,4 @@
-package proffNO
+package proffno
 
 type SearchStructure struct {
 	PageProps struct {

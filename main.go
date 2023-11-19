@@ -1,4 +1,4 @@
-package proffNO
+package proffno
 
 import (
 	"encoding/json"

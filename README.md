@@ -1,11 +1,11 @@
-# proffNO Go Library
+# proffno Go Library
 
 A Go library used to retrieve subsidiaries for a Norwegian company based on ownership percentage and depth level. Parses data from [proff.no](https://beta.proff.no)
 
 ## Installation
 
 ```
-go get github.com/root4loot/proffNO
+go get github.com/root4loot/proffno
 ```
 
 ## Usage
@@ -15,12 +15,12 @@ package main
 
 import (
     "fmt"
-    "github.com/root4loot/proffNO"
+    "github.com/root4loot/proffno"
 )
 
 func main() {
     // Get subsidiaries of a company and its sub-subsidiaries owned by more than 50%
-    subs, _ := proffNO.GetSubsidiaries("DnB Bank ASA", 2, 50)
+    subs, _ := proffno.GetSubsidiaries("DnB Bank ASA", 2, 50)
 
     for _, sub := range subs {
         fmt.Println(sub.Name)
