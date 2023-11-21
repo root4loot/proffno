@@ -57,6 +57,7 @@ func GetSubsidiaries(orgName string, level int, greaterThanPercentage float64) (
 		return results, nil
 	}
 
+	orgName = normalizeOrganizationName(orgName)
 	subs, _ := collectSubsidiaries(orgName)
 
 	for _, sub := range subs {
@@ -178,6 +179,28 @@ func collectSubsidiaries(query string) (results []Result, err error) {
 		}
 	}
 	return
+}
+
+func normalizeOrganizationName(name string) string {
+	words := strings.Fields(name)
+
+	for i, word := range words {
+		// Capitalize the first letter of each word
+		for _, v := range word {
+			u := string(unicode.ToUpper(v))
+			word = u + word[len(u):]
+			break
+		}
+
+		// Uppercase the last word if it is "AS" or "ASA"
+		if (strings.ToLower(word) == "as" || strings.ToLower(word) == "asa") && i == len(words)-1 {
+			word = strings.ToUpper(word)
+		}
+
+		words[i] = word
+	}
+
+	return strings.Join(words, " ")
 }
 
 // isNumeric checks if a string is numeric
