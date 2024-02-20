@@ -28,7 +28,7 @@ func findOrgInfo(query string, queryIsOrgName bool) (orgInfo string, err error) 
 		return "", err
 	}
 
-	response, err := http.Get("https://beta.proff.no/_next/data/" + buildID + "/search.json?q=" + query)
+	response, err := http.Get("https://proff.no/_next/data/" + buildID + "/search.json?q=" + query)
 	if err != nil {
 		return "", err
 	}
@@ -82,7 +82,7 @@ func GetSubsidiaries(orgName string, level int, greaterThanPercentage float64) (
 
 func getBuildID() (string, error) {
 	// Make a GET request
-	resp, err := http.Get("https://beta.proff.no/")
+	resp, err := http.Get("https://proff.no/")
 	if err != nil {
 		return "", err
 	}
@@ -119,7 +119,7 @@ func collectSubsidiaries(query string) (results []Result, err error) {
 		orgNR, err = findOrgInfo(query, true)
 	}
 
-	response, err := http.Get("https://beta.proff.no/api/company/legal/" + orgNR + "/corporateStructure")
+	response, err := http.Get("https://proff.no/api/company/legal/" + orgNR + "/corporateStructure")
 	if err != nil {
 		return nil, err
 	}

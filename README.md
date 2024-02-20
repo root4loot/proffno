@@ -1,6 +1,6 @@
 # proffno Go Library
 
-A Go library used to retrieve subsidiaries for a Norwegian company based on ownership percentage and depth level. Parses data from [proff.no](https://beta.proff.no)
+A Go library used to retrieve subsidiaries for a Norwegian company based on ownership percentage and depth level. Parses data from [proff.no](https://proff.no)
 
 ## Installation
 
