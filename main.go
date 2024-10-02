@@ -10,19 +10,17 @@ import (
 )
 
 type Result struct {
-	Name            string  `json:"name"`            // Name of subsidiary
-	OwnedPercentage float64 `json:"ownedPercentage"` // Percentage of ownership
+	Name            string  `json:"name"`
+	OwnedPercentage float64 `json:"ownedPercentage"`
 }
 
 type Results struct {
 	Results []Result `json:"results"`
 }
 
-// findOrgInfo finds the organization number or name of the company
 func findOrgInfo(query string, queryIsOrgName bool) (orgInfo string, err error) {
 	query = strings.ReplaceAll(query, " ", "+")
 
-	// Get the build ID
 	buildID, err := getBuildID()
 	if err != nil {
 		return "", err
@@ -51,7 +49,6 @@ func findOrgInfo(query string, queryIsOrgName bool) (orgInfo string, err error) 
 	return orgInfo, nil
 }
 
-// GetSubsidiaries gets the subsidiaries of a company
 func GetSubsidiaries(orgName string, level int, greaterThanPercentage float64) (results []Result, err error) {
 	if level <= 0 {
 		return results, nil
@@ -67,8 +64,6 @@ func GetSubsidiaries(orgName string, level int, greaterThanPercentage float64) (
 				OwnedPercentage: sub.OwnedPercentage,
 			}
 			results = append(results, result)
-
-			// Recursively call the function for sub-subsidiaries
 			subSubs, err := GetSubsidiaries(sub.Name, level-1, greaterThanPercentage)
 			if err != nil {
 				return nil, err
@@ -81,32 +76,26 @@ func GetSubsidiaries(orgName string, level int, greaterThanPercentage float64) (
 }
 
 func getBuildID() (string, error) {
-	// Make a GET request
 	resp, err := http.Get("https://proff.no/")
 	if err != nil {
 		return "", err
 	}
 	defer resp.Body.Close()
 
-	// Read the response body
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return "", err
 	}
-
-	// Regular expression to find the build ID
 	re := regexp.MustCompile(`"buildId":"(.*?)"`)
 	matches := re.FindStringSubmatch(string(body))
 
 	if len(matches) < 2 {
-		return "", nil // No match found
+		return "", nil 
 	}
 
-	// Return the found build ID
 	return matches[1], nil
 }
 
-// collectSubsidiaries collects the subsidiaries of a company
 func collectSubsidiaries(query string) (results []Result, err error) {
 	var structure CorporateStructure
 	var orgNR, orgName string
@@ -185,14 +174,12 @@ func normalizeOrganizationName(name string) string {
 	words := strings.Fields(name)
 
 	for i, word := range words {
-		// Capitalize the first letter of each word
 		for _, v := range word {
 			u := string(unicode.ToUpper(v))
 			word = u + word[len(u):]
 			break
 		}
 
-		// Uppercase the last word if it is "AS" or "ASA"
 		if (strings.ToLower(word) == "as" || strings.ToLower(word) == "asa") && i == len(words)-1 {
 			word = strings.ToUpper(word)
 		}
@@ -203,7 +190,6 @@ func normalizeOrganizationName(name string) string {
 	return strings.Join(words, " ")
 }
 
-// isNumeric checks if a string is numeric
 func isNumeric(s string) bool {
 	for _, char := range s {
 		if !unicode.IsDigit(char) {
