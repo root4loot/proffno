@@ -10,6 +10,7 @@ import (
 )
 
 type Result struct {
+	RawInput        string  `json:"rawInput"`
 	Name            string  `json:"name"`
 	OwnedPercentage float64 `json:"ownedPercentage"`
 }
@@ -90,7 +91,7 @@ func getBuildID() (string, error) {
 	matches := re.FindStringSubmatch(string(body))
 
 	if len(matches) < 2 {
-		return "", nil 
+		return "", nil
 	}
 
 	return matches[1], nil
