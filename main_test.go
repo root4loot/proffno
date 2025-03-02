@@ -6,10 +6,9 @@ import (
 
 func TestGetSubsidiaries(t *testing.T) {
 	orgName := "DnB Bank ASA"
-	level := 2
 	greaterThanPercentage := 50.0
 
-	results, err := GetSubsidiaries(orgName, level, greaterThanPercentage)
+	results, err := GetSubsidiaries(orgName, greaterThanPercentage)
 	if err != nil {
 		t.Fatalf("Expected no error, got %v", err)
 	}

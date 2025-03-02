@@ -7,8 +7,8 @@ import (
 )
 
 func main() {
-	// Get subsidiaries of a company and its sub-subsidiaries owned by more than 50%
-	subs, _ := proffno.GetSubsidiaries("DnB Bank ASA", 2, 50)
+	// Get subsidiaries with ownership percentage greater than 50%
+	subs, _ := proffno.GetSubsidiaries("DnB Bank ASA", 50)
 
 	for _, sub := range subs {
 		fmt.Println(sub.Name)

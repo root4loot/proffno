@@ -50,22 +50,30 @@ func findOrgInfo(query string, queryIsOrgName bool) (orgInfo string, err error) 
 	return orgInfo, nil
 }
 
-func GetSubsidiaries(orgName string, level int, greaterThanPercentage float64) (results []Result, err error) {
+func GetSubsidiaries(orgName string, greaterThanPercentage float64) ([]Result, error) {
+	return getSubsidiaries(orgName, 1, greaterThanPercentage)
+}
+
+func getSubsidiaries(orgName string, level int, greaterThanPercentage float64) ([]Result, error) {
 	if level <= 0 {
-		return results, nil
+		return nil, nil
 	}
 
 	orgName = normalizeOrganizationName(orgName)
-	subs, _ := collectSubsidiaries(orgName)
+	subs, err := collectSubsidiaries(orgName)
+	if err != nil {
+		return nil, err
+	}
 
+	var results []Result
 	for _, sub := range subs {
 		if sub.OwnedPercentage > greaterThanPercentage {
-			result := Result{
+			results = append(results, Result{
 				Name:            sub.Name,
 				OwnedPercentage: sub.OwnedPercentage,
-			}
-			results = append(results, result)
-			subSubs, err := GetSubsidiaries(sub.Name, level-1, greaterThanPercentage)
+			})
+			// Recursive call with decreased level
+			subSubs, err := getSubsidiaries(sub.Name, level-1, greaterThanPercentage)
 			if err != nil {
 				return nil, err
 			}
@@ -75,7 +83,6 @@ func GetSubsidiaries(orgName string, level int, greaterThanPercentage float64) (
 
 	return results, nil
 }
-
 func getBuildID() (string, error) {
 	resp, err := http.Get("https://proff.no/")
 	if err != nil {
